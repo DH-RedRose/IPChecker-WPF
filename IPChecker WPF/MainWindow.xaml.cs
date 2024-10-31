@@ -66,6 +66,7 @@ namespace IPChecker_WPF
 
             ContextMenuStrip contextMenu = new ContextMenuStrip();
             _ = contextMenu.Items.Add("Open", null, (s, e) => Show());
+            _ = contextMenu.Items.Add("Update", null, (s, e) => ButtonUpdate());
             _ = contextMenu.Items.Add("Exit", null, (s, e) => Application.Current.Shutdown());
             trayIcon.ContextMenuStrip = contextMenu;
 
@@ -99,6 +100,11 @@ namespace IPChecker_WPF
 
             await Config.SendToDiscord(this, $"Connected Webhook! {DispalyTextBox.Text}:{currentIp} will re-display in 24 hours");
             errorLabel.Content = "Webhook URL saved and IP updated!";
+        }
+        private async void ButtonUpdate()
+        {
+            string currentIp = await Config.GetExternalIpAddress();
+            await Config.SendToDiscord(this, $"Manual Update: {currentIp}");
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
